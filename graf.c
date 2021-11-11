@@ -91,6 +91,7 @@ int main () {
   print_list( list );
 
   add_first( &list, 3 );
+  insert_before( &head, 8 );
 
   print_list( list );
 
