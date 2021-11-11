@@ -2,8 +2,8 @@
 .PHONY: main 
 
 %.out: %.c 
-	gcc $< -o $<
+	gcc -o $@ $<
 
-main: graf
+main: graf.out
 	./$<
 
