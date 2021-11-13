@@ -11,6 +11,21 @@ typedef struct list {
   struct node * head;
 } list_t;
 
+// list commands
+void print_list( list_t *list ) {
+  printf("{");
+  if ( (*list).head == NULL ) {
+    printf( "}\n" );
+  } else {
+    node_t * p = (*list).head;
+    while (p != NULL) {
+      printf( " %zu,", (*p).value );
+      p = (*p).next;
+    }
+    printf("\b }\n");
+  }
+}
+
 // list queries
 size_t length( list_t *list ) {
   size_t len = 0;
@@ -28,6 +43,9 @@ node_t *first_node( list_t *list ) {
 
 node_t *last_node( list_t *list ) {
   node_t *node = (*list).head;
+  if ( node == NULL ) {
+    return node;
+  }
   while ((*node).next != NULL) {
     node = (*node).next;
   }
@@ -58,11 +76,19 @@ void insert_before( node_t *node, v_t value ) {
 }
 
 void add_first( list_t *list, v_t value ) {
-  insert_before( first_node( list ), value );
+  node_t *node = malloc( sizeof( node_t ) );
+
+  *node = (node_t) { value, (*list).head };
+  (*list).head = node;
 }
 
 void add_last( list_t *list, v_t value ) {
-  insert_after( last_node( list ), value );
+  node_t *node = last_node( list );
+  if ( node == NULL ) {
+    add_first( list, value );
+  } else {
+    insert_after( node, value );
+  }
 }
 
 void behead( list_t *list) {
@@ -75,20 +101,5 @@ void behead( list_t *list) {
 
 void set_value( node_t *node, v_t value ) {
   (*node).value = value;
-}
-
-// list commands
-void print_list( list_t *list ) {
-  printf("{");
-  if ( (*list).head == NULL ) {
-    printf( "}\n" );
-  } else {
-    node_t * p = (*list).head;
-    while (p != NULL) {
-      printf( " %zu,", (*p).value );
-      p = (*p).next;
-    }
-    printf("\b }\n");
-  }
 }
 
