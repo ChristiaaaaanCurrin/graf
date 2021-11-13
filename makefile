@@ -1,7 +1,7 @@
 
 .PHONY: main clean
 
-%.out: %.c 
+%.out: %.c list.h
 	gcc -o $@ $<
 
 clean:
