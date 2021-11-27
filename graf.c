@@ -8,11 +8,12 @@ typedef size_t v_t;
 
 typedef struct node {
   v_t value;
-  struct node * next;
+  struct node *next;
 } node_t;
 
 typedef struct list {
-  struct node * head;
+  struct node *head;
+  struct node *tail;
 } list_t;
 
 // list commands
@@ -32,7 +33,7 @@ void print_list( list_t *list ) {
 
 list_t *new_list() {
   list_t *list = malloc( sizeof( list_t ) );
-  *list = (list_t) { NULL };
+  *list = (list_t) { NULL, NULL };
   return list;
 }
 
@@ -52,14 +53,7 @@ node_t *first_node( list_t *list ) {
 }
 
 node_t *last_node( list_t *list ) {
-  node_t *node = (*list).head;
-  if ( node == NULL ) {
-    return node;
-  }
-  while ( (*node).next != NULL ) {
-    node = (*node).next;
-  }
-  return node;
+  return (*list).tail;
 }
 
 v_t first( list_t *list ) {
@@ -82,65 +76,69 @@ int list_index( list_t *list, v_t v ) {
 }
 
 // list modification
-void insert_after( node_t *node, v_t value ) {
-  node_t *new_node = malloc( sizeof( node_t ) );
-
-  *new_node = (node_t) { value, (*node).next };
-  (*node).next = new_node;
-}
-
-void insert_before( node_t *node, v_t value ) {
-  node_t *new_node = malloc( sizeof( node_t ) );
-
-  *new_node = (node_t) { (*node).value, (*node).next };
-  *node = (node_t) { value, new_node };
-}
-
 void add_first( list_t *list, v_t value ) {
   node_t *node = malloc( sizeof( node_t ) );
 
   *node = (node_t) { value, (*list).head };
   (*list).head = node;
+
+  if ( (*list).head == NULL ) {
+    (*list).tail = node;
+  }
 }
 
 void add_last( list_t *list, v_t value ) {
-  node_t *node = last_node( list );
-  if ( node == NULL ) {
-    add_first( list, value );
+  node_t *node = malloc( sizeof( node_t ) );
+  *node = (node_t) { value, NULL };
+  if ( (*list).head == NULL ) {
+    (*list).head = node;
   } else {
-    insert_after( node, value );
+    (*(*list).tail).next = node;
+    (*list).tail = node;
   }
 }
 
-void behead( list_t *list) {
+v_t take_first( list_t *list ) {
   if ( (*list).head != NULL ) {
     node_t *p = (*list).head;
     (*list).head = (*p).next;
+    v_t v = (*p).value;
     free( p );
+    return v;
   }
 }
 
-void set_value( node_t *node, v_t value ) {
-  (*node).value = value;
+v_t take_last( list_t *list ) {
+  if ( (*list).tail != NULL ) {
+    node_t *p = (*list).tail;
+    v_t v = (*p).value;
+    free( p );
+    node_t *q = (*list).head;
+    while ( (*q).next != NULL ) {
+    q = (*q).next;
+    }
+    (*list).tail = q;
+    return v;
+  }
 }
 
-void remove_all( list_t *list, v_t v ) {
+void remove_all( list_t *list, v_t v ) { // warning: this method violates the order of the list!
   node_t *p = (*list).head;
   while ( p != NULL ) {
     if ( (*p).value == v ) {
       (*p).value = first( list );
-      behead( list );
+      take_first( list );
     }
     p = (*p).next;
   }
 }
 
-void remove_one( list_t *list, v_t v ) {
+void remove_one( list_t *list, v_t v ) { // warning:this method violates the order of the list!
   node_t *p = (*list).head;
   while ( p != NULL ) {
     if ( (*p).value == v ) {
       (*p).value = first( list );
-      behead( list );
+      take_first( list );
       return;
     }
     p = (*p).next;
