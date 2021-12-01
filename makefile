@@ -7,6 +7,6 @@
 clean:
 	rm *.out
 
-main: graf.out
+main: graf.out 
 	./$<
 

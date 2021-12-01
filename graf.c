@@ -7,9 +7,7 @@
 
 // main
 int main () {
-  graph_t *g = empty_graph( 10 );
-  print_graph( g );
-  link_u( first( vertex_set( g ) ), last( vertex_set( g ) ) ); 
+  graph_t *g = cycle_graph( 10 );
   print_graph( g );
   return 0;
 }

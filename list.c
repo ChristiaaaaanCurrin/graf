@@ -26,7 +26,7 @@ void print_list( list_t *list ) {
   } else {
     node_t *p = (*list).head;
     while (p != NULL) {
-      printf( " %zu,", (size_t) (*p).value );
+      printf( " %d,", (int) (*p).value & 0x1ff );
       p = (*p).next;
     }
     printf("\b }\n");

@@ -56,7 +56,7 @@ void link_u( vertex_t *v, vertex_t *u ) {
     add_first(    neighborhood( v ), u );
     add_first( in_neighborhood( u ), v );
   }
-  if (!adjacent( v, u ) ) {
+  if (!adjacent( u, v ) ) {
     add_first(    neighborhood( u ), v );
     add_first( in_neighborhood( v ), u );
   }
@@ -111,7 +111,7 @@ void delete_vertex( graph_t *g, vertex_t *v ) {
 void print_graph( graph_t *g ) {
   node_t *p = first_node( (*g).vertex_set );
   while ( p != NULL ) {
-    printf( "%zu\t", (size_t) (*p).value );
+    printf( "%d\t", (int) (*p).value & 0xfff);
     print_list( neighborhood( (*p).value ) );
     p = (*p).next;
   }
@@ -141,7 +141,7 @@ graph_t *empty_graph( size_t order ) {
 
 graph_t *path_graph( size_t order ) {
   graph_t *g = empty_graph( order );
-  node_t *p = first( (*g).vertex_set );
+  node_t *p = first_node( (*g).vertex_set );
   node_t *q;
   while ( p != NULL ) {
     q = (*p).next;
@@ -153,16 +153,20 @@ graph_t *path_graph( size_t order ) {
   return g;
 }
 
+graph_t *cycle_graph( size_t order ) {
+  graph_t *g = path_graph( order );
+  link_u( first( (*g).vertex_set ), last( (*g).vertex_set ) );
+  return g;
+}
+
 graph_t *complete_graph( size_t order ) {
   graph_t *g = empty_graph( order );
-  node_t *p = first( (*g).vertex_set );
+  node_t *p = first_node( (*g).vertex_set );
   node_t *q;
   while ( p != NULL ) {
     q = (*p).next;
     while ( q != NULL ) {
-      if ( (*p).value != (*q).value ) {
-        link_u( (*p).value, (*q).value );
-      }
+      link_u( (*p).value, (*q).value );
       q = (*q).next;
     }
     p = (*p).next;
