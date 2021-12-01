@@ -5,8 +5,8 @@
 	gcc -o $@ $<
 
 clean:
-	rm *.out
+	rm -f *.out
 
-main: graf.out 
-	./$<
+main: graf.out
+	./graf.out
 

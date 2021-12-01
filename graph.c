@@ -111,7 +111,7 @@ void delete_vertex( graph_t *g, vertex_t *v ) {
 void print_graph( graph_t *g ) {
   node_t *p = first_node( (*g).vertex_set );
   while ( p != NULL ) {
-    printf( "%d\t", (int) (*p).value & 0xfff);
+    printf( "%x\t", 0xff & ((int) (*p).value >> 3) );
     print_list( neighborhood( (*p).value ) );
     p = (*p).next;
   }
