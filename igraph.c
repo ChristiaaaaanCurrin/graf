@@ -1,13 +1,12 @@
 
 // graph definition
-typedef struct vertex {
-  list_t *neighborhood;
-  list_t *in_neighborhood;
-} vertex_t;
+typedef struct edge {
+  list_t *incidents;
+} edge_t;
 
-typedef struct graph {
-  list_t *vertex_set;
-} graph_t;
+typedef struct igraph {
+  list_t *edge_set;
+} igraph_t;
 
 // graph queries
 list_t *neighborhood( vertex_t *v ) {
@@ -108,12 +107,6 @@ void delete_vertex( graph_t *g, vertex_t *v ) {
 }
 
 // graph commands
-
-void print_vertex( vertex_t *v ) {
-  printf( "%x\t", 0xff & ((int) v >> 3) );
-  print_list( neighborhood( v ) );
-}
-
 void print_graph( graph_t *g ) {
   node_t *p = first_node( (*g).vertex_set );
   while ( p != NULL ) {
@@ -121,7 +114,6 @@ void print_graph( graph_t *g ) {
     print_list( neighborhood( (*p).value ) );
     p = (*p).next;
   }
-  map( &print_vertex, (*g).vertex_set );
 }
 
 vertex_t *empty_vertex(){

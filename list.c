@@ -177,3 +177,34 @@ list_t *copy_list( list_t* list ) {
   }
   return list2;
 }
+
+void map( void *f( v_t ), list_t *list ) {
+  node_t *p = (*list).head;
+  while ( p != NULL ) {
+    f( (*p).value );
+    p = (*p).next;
+  }
+}
+
+int any( int *f( v_t ), list_t *list ) {
+  node_t *p = (*list).head;
+  while ( p != NULL ) {
+    if ( f( (*p).value ) ) {
+      return 1;
+    }
+    p = (*p).next;
+  }
+  return 0;
+}
+
+int all( int *f( v_t ), list_t *list ) {
+  node_t *p = (*list).head;
+  while ( p != NULL ) {
+    if ( !f( (*p).value ) ) {
+      return 0;
+    }
+    p = (*p).next;
+  }
+  return 1;
+}
+
