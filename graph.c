@@ -3,6 +3,7 @@
 typedef struct vertex {
   list_t *neighborhood;
   list_t *in_neighborhood;
+  size_t note;
 } vertex_t;
 
 typedef struct graph {
@@ -115,18 +116,20 @@ void print_vertex( vertex_t *v ) {
 }
 
 void print_graph( graph_t *g ) {
+  /*
   node_t *p = first_node( (*g).vertex_set );
   while ( p != NULL ) {
     printf( "%x\t", 0xff & ((int) (*p).value >> 3) );
     print_list( neighborhood( (*p).value ) );
     p = (*p).next;
   }
+  */
   map( &print_vertex, (*g).vertex_set );
 }
 
 vertex_t *empty_vertex(){
   vertex_t *v = malloc( sizeof( vertex_t ) );
-  *v = (vertex_t) { new_list(), new_list() };
+  *v = (vertex_t) { new_list(), new_list(), };
   return v;
 }
 
@@ -181,8 +184,31 @@ graph_t *complete_graph( size_t order ) {
   return g;
 }
 
-int distance( vertex_t *v, vertex_t *u ) {
-  
+typedef struct weighted_vertex {
+  vertex_t *vertex;
+  size_t weight;
+} weighted_vertex;
+
+size_t distance( vertex_t *v, vertex_t *u ) {
+  weighed_vertex w = { v, 0 };
+  list_t *visiting = new_list();
+  list_t *visited = new_list();
+  list_t *handling;
+  add_first( visiting &w );
+  while ( !is_empty( visiting ) ) {
+    w = *take_first( visiting );
+    if ( w.vertex == u ) {
+      return w.weight;
+    }
+    handling = copy_list( neighborhood( w.vertex ) );
+    while ( !is_empty( handling ) ) {
+      v = take_first( handling );
+      if ( !contains( v, visited ) ) {
+        add_last( visiting, (weighted_vertex) { v, w.weight + 1 } );
+      }
+    }
+    add_first( visited, w.vertex );
+  }
   return -1;
 }
 

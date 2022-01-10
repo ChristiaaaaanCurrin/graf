@@ -15,7 +15,7 @@ typedef struct list {
 
 // error behavior
 void empty_list_error() {
- printf( "EMPTY LIST ERROR\n"  );
+ // printf( "EMPTY LIST ERROR\n"  );
 }
 
 // list commands
@@ -168,6 +168,11 @@ void clear_list( list_t *list ) {
   }
 }
 
+void kill_list( list_t *list ) {
+  clear_list( list );
+  free( list );
+}
+
 list_t *copy_list( list_t* list ) {
   list_t *list2 = new_list();
   node_t *p = (*list).head;
@@ -208,3 +213,24 @@ int all( int *f( v_t ), list_t *list ) {
   return 1;
 }
 
+int contains( v_t v, list_t * list ) {
+  node_t *p = (*list).head;
+  while ( p != NULL ) {
+    if ( v == (*p).value ) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+void concat( list_t *list1, list_t * list2 ) {
+  node_t *p = (*list1).head;
+  while ( p != NULL ) {
+    add_last( list1, (*p).value );
+    p = (*p).next;
+  }
+}
+
+int is_Empty( list_t *list) {
+  return (*list).head == NULL;
+}

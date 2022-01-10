@@ -2,7 +2,7 @@
 .PHONY: main clean
 
 %.out: %.c 
-	gcc -o $@ $<
+	gcc -Wall -std=c99 -o $@ $<
 
 clean:
 	rm -f *.out
